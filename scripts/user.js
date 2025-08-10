@@ -115,65 +115,119 @@ setSelector.addEventListener("change", async () => {
   }
 
   flashcardList.innerHTML = "";
-  cards.forEach(card => renderCard(card));
+  cards.forEach(card => {
+    const cardEl = Flashcard({
+      id: card.id,
+      question: card.question,
+      answer: card.answer,
+      onDelete: async (id) => {
+        const { error } = await supabase.from("flashcards").delete().eq("id", id);
+        if (error) console.error("Failed to delete card:", error.message);
+      },
+      onSave: async ({ id, question, answer }) => {
+        if (!question || !answer) return;
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) return;
+
+        if (id) {
+          await supabase.from("flashcards").update({ question, answer }).eq("id", id);
+        } else {
+          await supabase.from("flashcards").insert([
+            { user_id: user.id, set_id: currentSetId, question, answer }
+          ]);
+        }
+      }
+    });
+    flashcardList.appendChild(cardEl);
+  });
+
   flashcardModal.classList.remove("hidden");
 });
 
-// 🧱 Render a Card Row
-function renderCard(card = {}) {
-  const cardEl = document.createElement("div");
-  cardEl.className = "card-row";
-  cardEl.innerHTML = `
-    <input type="text" placeholder="Question" value="${card.question || ""}" />
-    <input type="text" placeholder="Answer" value="${card.answer || ""}" />
-    <button class="delete-card-btn">🗑️</button>
-  `;
-  cardEl.dataset.id = card.id || "";
-  flashcardList.appendChild(cardEl);
 
-  cardEl.querySelector(".delete-card-btn").addEventListener("click", () => {
-    cardEl.remove();
+
+// 🧱 Render a Card Row
+function Flashcard({ id = "", question = "", answer = "", onDelete, onSave }) {
+  const cardEl = document.createElement("div");
+  cardEl.className = "flashcard";
+  cardEl.dataset.id = id;
+
+  cardEl.innerHTML = `
+    <div class="flashcard-inner">
+      <div class="flashcard-front">
+        <input type="text" placeholder="Question" value="${question}" />
+      </div>
+      <div class="flashcard-back">
+        <input type="text" placeholder="Answer" value="${answer}" />
+      </div>
+    </div>
+    <div class="save-indicator">💾</div>
+    <div class="card-actions">
+      <button class="flip-btn">🔄 Flip</button>
+      <button class="delete-card-btn">🗑️</button>
+    </div>
+  `;
+
+  const inner = cardEl.querySelector(".flashcard-inner");
+  const flipBtn = cardEl.querySelector(".flip-btn");
+  const deleteBtn = cardEl.querySelector(".delete-card-btn");
+  const questionInput = cardEl.querySelector(".flashcard-front input");
+  const answerInput = cardEl.querySelector(".flashcard-back input");
+  const saveIndicator = cardEl.querySelector(".save-indicator");
+
+  flipBtn.addEventListener("click", () => {
+    inner.classList.toggle("flipped");
   });
+
+  deleteBtn.addEventListener("click", () => {
+    cardEl.remove();
+    if (onDelete) onDelete(id);
+  });
+
+  function showSaveIndicator() {
+    saveIndicator.classList.add("visible");
+    cardEl.classList.add("saved");
+    setTimeout(() => {
+      saveIndicator.classList.remove("visible");
+      cardEl.classList.remove("saved");
+    }, 800);
+  }
+
+  let saveTimeout;
+  [questionInput, answerInput].forEach(input => {
+    input.addEventListener("input", () => {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        const updated = {
+          id,
+          question: questionInput.value.trim(),
+          answer: answerInput.value.trim()
+        };
+        if (onSave) {
+          showSaveIndicator();
+          onSave(updated);
+        }
+      }, 500);
+    });
+  });
+
+  return cardEl;
 }
 
 // ➕ Add New Blank Card
 addCardBtn.addEventListener("click", () => {
-  renderCard();
-});
+  const cardEl = Flashcard({
+    onSave: async ({ question, answer }) => {
+      if (!question || !answer) return;
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) return;
 
-// 💾 Save All Cards
-saveSetBtn.addEventListener("click", async () => {
-  const cardEls = flashcardList.querySelectorAll(".card-row");
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
-    console.error("User not authenticated:", authError?.message);
-    return;
-  }
-
-  for (const el of cardEls) {
-    const question = el.querySelector("input[placeholder='Question']").value.trim();
-    const answer = el.querySelector("input[placeholder='Answer']").value.trim();
-    const id = el.dataset.id;
-
-    if (!question || !answer) continue;
-
-    if (id) {
-      const { error } = await supabase.from("flashcards").update({ question, answer }).eq("id", id);
-      if (error) console.error("Failed to update card:", error.message);
-    } else {
-      const { error } = await supabase.from("flashcards").insert([
-        {
-          user_id: user.id,
-          set_id: currentSetId,
-          question,
-          answer
-        }
+      await supabase.from("flashcards").insert([
+        { user_id: user.id, set_id: currentSetId, question, answer }
       ]);
-      if (error) console.error("Failed to insert card:", error.message);
     }
-  }
-
-  setSelector.dispatchEvent(new Event("change")); // Reload cards
+  });
+  flashcardList.appendChild(cardEl);
 });
 
 // 🔄 Initialize
