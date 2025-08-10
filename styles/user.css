@@ -53,6 +53,10 @@ button {
   margin-top: 1rem;
   color: #d33;
 }
+
+#logout-btn{
+  color:#003e74;
+}
 .menu-container {
   position: relative;
   display: inline-block;
