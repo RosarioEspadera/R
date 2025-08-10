@@ -2,6 +2,18 @@ import { supabase } from "./supabase.js";
 import { initTheme } from "./theme.js";
 initTheme();
 
+const menuToggle = document.getElementById("menu-toggle");
+const menuDropdown = document.getElementById("menu-dropdown");
+
+menuToggle.addEventListener("click", () => {
+  menuDropdown.classList.toggle("hidden");
+
+  // Optional: toggle aria-expanded for accessibility
+  const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+  menuToggle.setAttribute("aria-expanded", !expanded);
+});
+
+
 const logoutBtn = document.getElementById("logout-btn");
 
 logoutBtn.addEventListener("click", async () => {
