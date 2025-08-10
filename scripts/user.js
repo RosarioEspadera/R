@@ -1,5 +1,25 @@
 import { supabase } from "./supabase.js";
 
+
+document.getElementById("set-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const setName = document.getElementById("set-name").value.trim();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase.from("flashcard_sets").insert({
+    user_id: user.id,
+    name: setName
+  });
+
+  if (error) {
+    statusMsg.textContent = error.message;
+  } else {
+    statusMsg.textContent = "Set created!";
+    e.target.reset();
+  }
+});
+
+
 // Flashcard Upload Logic
 const flashcardForm = document.getElementById("flashcard-form");
 const statusMsg = document.getElementById("statusMsg");
