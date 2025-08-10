@@ -148,9 +148,10 @@ button:hover {
   height: 160px;
   transition: transform 0.6s;
   transform-style: preserve-3d;
+  transform: rotateY(0deg); /* ✅ Always show front by default */
 }
 
-.flashcard:hover .flashcard-inner {
+.flashcard-inner.flipped {
   transform: rotateY(180deg);
 }
 
