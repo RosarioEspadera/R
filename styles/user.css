@@ -39,6 +39,10 @@ form {
   gap: 1rem;
 }
 
+#set-form button:hover{
+  color:#0b1e2c;
+  background: #a7e4ff;
+}
 input,
 button {
   padding: 0.75rem;
@@ -68,28 +72,38 @@ button:hover {
 
 /* Logout Button */
 #logout-btn {
-  color: #003e74;
+  color: #101b25;
   font-weight: 500;
 }
-
+#logout-btn:hover{
+  color:#852929;
+}
 /* Menu Dropdown */
 .menu-container {
   position: relative;
   display: inline-block;
 }
-
+.menu-container:hover {
+  color:#ffff7b;
+}
 .menu-button {
   background: none;
   border: none;
   cursor: pointer;
 }
-
+.menu-button:hover {
+  background: ##000000;
+  border: none;
+  cursor: pointer;
+}
 .menu-icon {
   width: 24px;
   height: 24px;
-  color: #333;
+  color: #000000;
 }
-
+.menu-icon:hover{
+  color: #795548;
+}
 .menu-dropdown {
   position: absolute;
   top: 100%;
