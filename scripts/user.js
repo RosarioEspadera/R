@@ -222,27 +222,34 @@ function Flashcard({ id = "", question = "", answer = "", onDelete, onSave }) {
   cardEl.className = "flashcard";
   cardEl.dataset.id = id;
 
-  cardEl.innerHTML = `
-    <div class="flashcard-inner">
-      <div class="flashcard-front">
-        <input type="text" placeholder="Question" value="${question}" />
-      </div>
-      <div class="flashcard-back">
-        <input type="text" placeholder="Answer" value="${answer}" />
-      </div>
+ cardEl.innerHTML = `
+  <div class="flashcard-inner">
+    <div class="flashcard-front">
+      <textarea placeholder="Question">${question}</textarea>
     </div>
-    <div class="save-indicator">💾</div>
-    <div class="card-actions">
-      <button class="flip-btn">🔄 Flip</button>
-      <button class="delete-card-btn">🗑️</button>
+    <div class="flashcard-back">
+      <textarea placeholder="Answer">${answer}</textarea>
     </div>
-  `;
+  </div>
+  <div class="save-indicator">💾</div>
+  <div class="card-actions">
+    <button class="flip-btn">🔄 Flip</button>
+    <button class="delete-card-btn">🗑️</button>
+  </div>
+`;
+  
+cardEl.querySelectorAll('textarea').forEach(area => {
+  area.addEventListener('input', () => {
+    area.style.height = 'auto';
+    area.style.height = area.scrollHeight + 'px';
+  });
+});
 
   const inner = cardEl.querySelector(".flashcard-inner");
   const flipBtn = cardEl.querySelector(".flip-btn");
   const deleteBtn = cardEl.querySelector(".delete-card-btn");
-  const questionInput = cardEl.querySelector(".flashcard-front input");
-  const answerInput = cardEl.querySelector(".flashcard-back input");
+  const questionInput = cardEl.querySelector(".flashcard-front textarea");
+  const answerInput = cardEl.querySelector(".flashcard-back textarea");
   const saveIndicator = cardEl.querySelector(".save-indicator");
 
   flipBtn.addEventListener("click", () => {
