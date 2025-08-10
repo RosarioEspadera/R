@@ -2,6 +2,18 @@ import { supabase } from "./supabase.js";
 import { initTheme } from "./theme.js";
 initTheme();
 
+const menuToggle = document.getElementById("menu-toggle");
+const menuDropdown = document.getElementById("menu-dropdown");
+const logoutBtn = document.getElementById("logout-btn");
+
+// Toggle menu visibility
+menuToggle.addEventListener("click", () => {
+  const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
+  menuDropdown.classList.toggle("hidden");
+  menuToggle.setAttribute("aria-expanded", String(!isExpanded));
+});
+
+// Close menu when clicking outside
 document.addEventListener("click", (e) => {
   if (!menuDropdown.contains(e.target) && e.target !== menuToggle) {
     menuDropdown.classList.add("hidden");
@@ -9,23 +21,10 @@ document.addEventListener("click", (e) => {
   }
 });
 
-
-const menuToggle = document.getElementById("menu-toggle");
-const menuDropdown = document.getElementById("menu-dropdown");
-
-menuToggle.addEventListener("click", () => {
-  menuDropdown.classList.toggle("hidden");
-
-  // Optional: toggle aria-expanded for accessibility
-  const expanded = menuToggle.getAttribute("aria-expanded") === "true";
-  menuToggle.setAttribute("aria-expanded", !expanded);
-});
-
-
-const logoutBtn = document.getElementById("logout-btn");
-
+// Logout logic
 logoutBtn.addEventListener("click", async () => {
-  if (!confirm("Are you sure you want to log out?")) return;
+  const confirmed = confirm("Are you sure you want to log out?");
+  if (!confirmed) return;
 
   const { error } = await supabase.auth.signOut();
   if (error) {
