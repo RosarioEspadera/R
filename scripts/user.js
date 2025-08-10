@@ -19,7 +19,10 @@ let currentSetId = null;
 async function loadSets() {
   const { data: sets, error } = await supabase.from("flashcard_sets").select("*");
   setSelector.innerHTML = `<option value="">Select a set</option>`;
-  if (error) return console.error("Failed to load sets:", error.message);
+  if (error) {
+    console.error("Failed to load sets:", error.message);
+    return;
+  }
 
   sets.forEach(set => {
     const option = document.createElement("option");
@@ -33,17 +36,28 @@ async function loadSets() {
 setForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = setNameInput.value.trim();
-  const { data: { user } } = await supabase.auth.getUser();
+  if (!name) return;
 
-  const { error } = await supabase.from("flashcard_sets").insert({
-    user_id: user.id,
-    name
-  });
-
-  if (!error) {
-    setForm.reset();
-    loadSets();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    console.error("User not authenticated:", authError?.message);
+    return;
   }
+
+  const { error } = await supabase.from("flashcard_sets").insert([
+    {
+      user_id: user.id,
+      name
+    }
+  ]);
+
+  if (error) {
+    console.error("Failed to create set:", error.message);
+    return;
+  }
+
+  setForm.reset();
+  loadSets();
 });
 
 // ✏️ Edit Set Name
@@ -51,9 +65,14 @@ editSetBtn.addEventListener("click", async () => {
   const newName = prompt("Enter new name for the set:");
   if (!newName || !setSelector.value) return;
 
-  await supabase.from("flashcard_sets")
+  const { error } = await supabase.from("flashcard_sets")
     .update({ name: newName })
     .eq("id", setSelector.value);
+
+  if (error) {
+    console.error("Failed to update set name:", error.message);
+    return;
+  }
 
   loadSets();
 });
@@ -62,8 +81,13 @@ editSetBtn.addEventListener("click", async () => {
 deleteSetBtn.addEventListener("click", async () => {
   if (!setSelector.value || !confirm("Delete this set and all its cards?")) return;
 
-  await supabase.from("flashcards").delete().eq("set_id", setSelector.value);
-  await supabase.from("flashcard_sets").delete().eq("id", setSelector.value);
+  const { error: cardError } = await supabase.from("flashcards").delete().eq("set_id", setSelector.value);
+  const { error: setError } = await supabase.from("flashcard_sets").delete().eq("id", setSelector.value);
+
+  if (cardError || setError) {
+    console.error("Failed to delete set or cards:", cardError?.message || setError?.message);
+    return;
+  }
 
   loadSets();
   flashcardList.innerHTML = "";
@@ -80,10 +104,15 @@ setSelector.addEventListener("change", async () => {
   currentSetId = setSelector.value;
   if (!currentSetId) return;
 
-  const { data: cards } = await supabase
+  const { data: cards, error } = await supabase
     .from("flashcards")
     .select("*")
     .eq("set_id", currentSetId);
+
+  if (error) {
+    console.error("Failed to load cards:", error.message);
+    return;
+  }
 
   flashcardList.innerHTML = "";
   cards.forEach(card => renderCard(card));
@@ -115,6 +144,11 @@ addCardBtn.addEventListener("click", () => {
 // 💾 Save All Cards
 saveSetBtn.addEventListener("click", async () => {
   const cardEls = flashcardList.querySelectorAll(".card-row");
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    console.error("User not authenticated:", authError?.message);
+    return;
+  }
 
   for (const el of cardEls) {
     const question = el.querySelector("input[placeholder='Question']").value.trim();
@@ -124,15 +158,18 @@ saveSetBtn.addEventListener("click", async () => {
     if (!question || !answer) continue;
 
     if (id) {
-      await supabase.from("flashcards").update({ question, answer }).eq("id", id);
+      const { error } = await supabase.from("flashcards").update({ question, answer }).eq("id", id);
+      if (error) console.error("Failed to update card:", error.message);
     } else {
-      const { data: { user } } = await supabase.auth.getUser();
-      await supabase.from("flashcards").insert({
-        user_id: user.id,
-        set_id: currentSetId,
-        question,
-        answer
-      });
+      const { error } = await supabase.from("flashcards").insert([
+        {
+          user_id: user.id,
+          set_id: currentSetId,
+          question,
+          answer
+        }
+      ]);
+      if (error) console.error("Failed to insert card:", error.message);
     }
   }
 
