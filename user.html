@@ -32,26 +32,40 @@
 </svg>
 </a>
     </nav>
+    
+ <!-- 🔤 Create New Set -->
+  <section id="set-creation">
+    <form id="set-form">
+      <input type="text" id="set-name" placeholder="New Set Name" required />
+      <button type="submit">Create Set</button>
+    </form>
+  </section>
 
-  <form id="set-form">
-  <input type="text" id="set-name" placeholder="New Set Name" required />
-  <button type="submit">Create Set</button>
-</form>
+  <!-- 📚 Flashcard Set Dashboard -->
+  <section id="flashcard-dashboard">
+    <h2>Your Flashcard Sets</h2>
 
-  <div id="flashcard-dashboard">
-  <h2>Your Flashcard Sets</h2>
-  <button id="create-set-btn">➕ New Set</button>
-  <div id="sets-container"></div>
-</div>
+    <div class="set-controls">
+      <select id="set-selector" required>
+        <option value="">Select a set</option>
+      </select>
+      <button id="edit-set-btn">✏️ Edit Set</button>
+      <button id="delete-set-btn">🗑️ Delete Set</button>
+      <button id="create-set-btn">➕ New Set</button>
+    </div>
 
-  
-<!-- Modal for editing/creating flashcards -->
-<div id="flashcard-modal" class="hidden">
-  <h3>Edit Flashcards</h3>
-  <div id="flashcard-list"></div>
-  <button id="add-card-btn">Add Card</button>
-  <button id="save-set-btn">Save Changes</button>
-</div>
+    <div id="sets-container"></div>
+  </section>
+
+  <!-- 🃏 Modal for Editing/Creating Flashcards -->
+  <section id="flashcard-modal" class="hidden">
+    <h3>Edit Flashcards</h3>
+    <div id="flashcard-list"></div>
+    <div class="modal-actions">
+      <button id="add-card-btn">➕ Add Card</button>
+      <button id="save-set-btn">💾 Save Changes</button>
+    </div>
+  </section>
 
   <script type="module" src="scripts/user.js"></script>
   <script type="module" src="scripts/supabase.js"></script>
