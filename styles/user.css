@@ -1,7 +1,7 @@
 /* Base Layout */
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #461e1e;
+  background-color: #695353;
   padding: 2rem;
   max-width: 600px;
   margin: auto;
@@ -337,15 +337,16 @@ button:hover {
   transform: translateX(-50%) scale(1);
 }
 body[data-theme="light"] {
-  --bg: #ffffff;
+  --bg: #dedede;
   --text: #1f2937;
-  --accent: #3b82f6;
+  --accent: #5a92ef;
 }
 
 body[data-theme="dark"] {
   --bg: #1f2937;
-  --text: #f3f4f6;
-  --accent: #60a5fa;
+  --text: #ffffff;
+  --accent: #77a9e5;
+  --icon: #fff;
 }
 
 body {
@@ -361,5 +362,5 @@ button:hover {
   background-color: var(--text), 70%);
 }
 .size-6{
-  color: #ffff;
+  color: var(--text);
 }
