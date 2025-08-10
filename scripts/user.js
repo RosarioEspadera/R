@@ -1,4 +1,21 @@
 import { supabase } from "./supabase.js";
+import { initTheme } from "./theme.js";
+initTheme();
+
+const logoutBtn = document.getElementById("logout-btn");
+
+logoutBtn.addEventListener("click", async () => {
+  if (!confirm("Are you sure you want to log out?")) return;
+
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error("Logout failed:", error.message);
+    return;
+  }
+
+  window.location.href = "login.html";
+});
+
 
 const setForm = document.getElementById("set-form");
 const setNameInput = document.getElementById("set-name");
