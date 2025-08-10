@@ -2,6 +2,14 @@ import { supabase } from "./supabase.js";
 import { initTheme } from "./theme.js";
 initTheme();
 
+document.addEventListener("click", (e) => {
+  if (!menuDropdown.contains(e.target) && e.target !== menuToggle) {
+    menuDropdown.classList.add("hidden");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
+
 const menuToggle = document.getElementById("menu-toggle");
 const menuDropdown = document.getElementById("menu-dropdown");
 
