@@ -1,11 +1,15 @@
+/* Base Layout */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f9f9f9;
+  background-color: #f9f9f9;
   padding: 2rem;
   max-width: 600px;
   margin: auto;
+  line-height: 1.6;
+  color: #333;
 }
 
+/* Navigation */
 .top-nav {
   display: flex;
   gap: 0.5rem;
@@ -19,27 +23,26 @@ body {
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease-in-out;
 }
 
 .top-nav a:hover {
-  background: rgb(173 143 121 / 40%);
+  background-color: rgba(173, 143, 121, 0.4);
 }
 
-.size-6 {
-  width: 24px;
-  height: 24px;
-}
-
+/* Form Elements */
 form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-input, button {
+input,
+button {
   padding: 0.75rem;
   font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 button {
@@ -47,16 +50,27 @@ button {
   color: white;
   border: none;
   cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
+button:hover {
+  background-color: #45a049;
+}
+
+/* Status Message */
 #statusMsg {
   margin-top: 1rem;
   color: #d33;
+  font-weight: 500;
 }
 
-#logout-btn{
-  color:#003e74;
+/* Logout Button */
+#logout-btn {
+  color: #003e74;
+  font-weight: 500;
 }
+
+/* Menu Dropdown */
 .menu-container {
   position: relative;
   display: inline-block;
@@ -78,12 +92,13 @@ button {
   position: absolute;
   top: 36px;
   right: 0;
-  background: #fff;
+  background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
+  animation: slide-bck-center 0.45s ease-in-out both;
 }
 
 .menu-dropdown.hidden {
@@ -92,9 +107,7 @@ button {
 
 .menu-dropdown.visible {
   display: block;
-  animation: slide-bck-center 0.45s ease-in-out both;
 }
-
 
 .menu-dropdown button {
   background: none;
@@ -105,6 +118,14 @@ button {
   font-size: 1rem;
   cursor: pointer;
 }
+
+/* Icon Sizing */
+.size-6 {
+  width: 24px;
+  height: 24px;
+}
+
+/* Animations */
 @keyframes slide-bck-center {
   0% {
     transform: translateZ(0);
@@ -112,8 +133,4 @@ button {
   100% {
     transform: translateZ(-400px);
   }
-}
-
-.menu-dropdown {
-  animation: slide-bck-center 0.45s ease-in-out both;
 }
