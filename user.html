@@ -32,14 +32,20 @@
 </svg>
 </a>
     </nav>
-  <h1>Upload Your Flashcard</h1>
-  <form id="flashcard-form">
-    <input type="text" id="question" placeholder="Question" required />
-    <input type="text" id="answer" placeholder="Answer" required />
-    <input type="file" id="image" accept="image/*" />
-    <button type="submit">Upload</button>
-    <div id="statusMsg"></div>
-  </form>
+  <div id="flashcard-dashboard">
+  <h2>Your Flashcard Sets</h2>
+  <button id="create-set-btn">➕ New Set</button>
+  <div id="sets-container"></div>
+</div>
+
+<!-- Modal for editing/creating flashcards -->
+<div id="flashcard-modal" class="hidden">
+  <h3>Edit Flashcards</h3>
+  <div id="flashcard-list"></div>
+  <button id="add-card-btn">Add Card</button>
+  <button id="save-set-btn">Save Changes</button>
+</div>
+
   <script type="module" src="scripts/user.js"></script>
   <script type="module" src="scripts/supabase.js"></script>
     <script type="module" src="scripts/authRedirect.js"></script>
