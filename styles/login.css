@@ -84,12 +84,36 @@ form button:hover {
   background-color: #e76f51;
 }
 
-.error {
-  color: #d62828;
+.show-error{
+  text-align: center;
+  color: #ef4444;
   font-size: 0.9rem;
   margin-top: 0.5rem;
-  text-align: center;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
+.show-error {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-out {
+  animation: fadeOut 0.6s ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
 
 /* Sign Up Link */
 .signUpBtn {
