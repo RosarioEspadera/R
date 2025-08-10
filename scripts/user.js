@@ -48,3 +48,17 @@ document.getElementById("flashcard-form").addEventListener("submit", async (e) =
     e.target.reset();
   }
 });
+
+const menuToggle = document.getElementById("menu-toggle");
+const menuDropdown = document.getElementById("menu-dropdown");
+const logoutBtn = document.getElementById("logout-btn");
+
+menuToggle.addEventListener("click", () => {
+  menuDropdown.classList.toggle("visible");
+  menuDropdown.classList.toggle("hidden");
+});
+
+logoutBtn.addEventListener("click", async () => {
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+});
