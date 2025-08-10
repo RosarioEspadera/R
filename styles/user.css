@@ -70,6 +70,10 @@ button:hover {
   font-weight: 500;
 }
 
+.menu-button .menu-icon {
+  pointer-events: none;
+}
+
 /* Logout Button */
 #logout-btn {
   color: #101b25;
