@@ -15,6 +15,40 @@ const saveSetBtn = document.getElementById("save-set-btn");
 
 let currentSetId = null;
 
+saveSetBtn.addEventListener("click", () => {
+  if (!setSelector.value) {
+    // Visual cue
+    setSelector.classList.add("warning");
+
+    // Optional toast-style feedback
+    showToast("⚠️ Please select a flashcard set before saving changes.");
+
+    setSelector.focus();
+
+    // Remove visual cue after a moment
+    setTimeout(() => setSelector.classList.remove("warning"), 1500);
+    return;
+  }
+
+  // Proceed with saving logic if needed
+});
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("visible");
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.remove("visible");
+    setTimeout(() => toast.remove(), 300);
+  }, 2000);
+}
+
 // 🧩 Load Sets into Dropdown
 async function loadSets() {
   const { data: sets, error } = await supabase.from("flashcard_sets").select("*");
