@@ -12,6 +12,30 @@ header {
   text-align: center;
   padding: 2rem 1rem;
 }
+.top-nav {
+  display: flex;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.top-nav a {
+  color: #53321e;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.top-nav a:hover {
+  background: rgb(173 143 121 / 40%);
+}
+
+.size-6 {
+  width: 24px;
+  height: 24px;
+}
 
 .flashcard-set {
   display: flex;
