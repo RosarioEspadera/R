@@ -35,6 +35,19 @@ logoutBtn.addEventListener("click", async () => {
   window.location.href = "login.html";
 });
 
+async function isDuplicateCard(question, answer) {
+  const normalizedQuestion = question.trim().toLowerCase();
+  const normalizedAnswer = answer.trim().toLowerCase();
+
+  const { data, error } = await supabase
+    .from("flashcards")
+    .select("id")
+    .eq("set_id", currentSetId)
+    .eq("question", normalizedQuestion)
+    .eq("answer", normalizedAnswer);
+
+  return !error && data.length > 0;
+}
 
 const setForm = document.getElementById("set-form");
 const setNameInput = document.getElementById("set-name");
@@ -269,6 +282,29 @@ cardEl.querySelectorAll('textarea').forEach(area => {
       cardEl.classList.remove("saved");
     }, 800);
   }
+  
+async function handleSave({ id, question, answer }) {
+  if (!question || !answer) return;
+
+  const normalizedQuestion = question.trim().toLowerCase();
+  const normalizedAnswer = answer.trim().toLowerCase();
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) return;
+
+  if (!id && await isDuplicateCard(normalizedQuestion, normalizedAnswer)) {
+    showToast("⚠️ This card already exists in the set.");
+    return;
+  }
+
+  if (id) {
+    await supabase.from("flashcards").update({ question, answer }).eq("id", id);
+  } else {
+    await supabase.from("flashcards").insert([
+      { user_id: user.id, set_id: currentSetId, question, answer }
+    ]);
+  }
+}
 
   let saveTimeout;
   [questionInput, answerInput].forEach(input => {
@@ -282,7 +318,7 @@ cardEl.querySelectorAll('textarea').forEach(area => {
         };
         if (onSave) {
           showSaveIndicator();
-          onSave(updated);
+          handleSave(updated);
         }
       }, 500);
     });
@@ -296,8 +332,17 @@ addCardBtn.addEventListener("click", () => {
   const cardEl = Flashcard({
     onSave: async ({ question, answer }) => {
       if (!question || !answer) return;
+
+      const normalizedQuestion = question.trim().toLowerCase();
+      const normalizedAnswer = answer.trim().toLowerCase();
+
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if (authError || !user) return;
+
+      if (await isDuplicateCard(normalizedQuestion, normalizedAnswer)) {
+        showToast("⚠️ This card already exists in the set.");
+        return;
+      }
 
       await supabase.from("flashcards").insert([
         { user_id: user.id, set_id: currentSetId, question, answer }
@@ -306,6 +351,8 @@ addCardBtn.addEventListener("click", () => {
   });
   flashcardList.appendChild(cardEl);
 });
+
+
 
 // 🔄 Initialize
 loadSets();
