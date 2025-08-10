@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlareCards</title>
+  <link rel="stylesheet" href="styles/login.css" />
+</head>
+<body>
+  <header>
+    <h1>FlareCards</h1>
+    <p>A spark for memory. A space for mastery.</p>
+  </header>
+
+  <main>
+    <section class="auth">
+  <h2>Log In to Upload Your Flashcards</h2>
+  <form id="login-form">
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button type="submit">Log In</button>
+  </form>
+  <p id="auth-error" class="error"></p>
+</section>
+     <p>
+        Don't have an account?
+        <a href="signUp.html" id="createAccountLink" class="signUpBtn">Create Account</a>
+      </p>
+  </main>
+
+  <footer>
+    <p>© 2025 FlareCards. Built for students, by dreamers.</p>
+  </footer>
+
+  <script type="module" src="scripts/login.js"></script>
+  <script type="module" src="scripts/supabase.js"></script>
+</body>
+</html>

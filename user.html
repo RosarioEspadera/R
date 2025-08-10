@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Flashcards</title>
+  <link rel="stylesheet" href="styles/user.css" />
+</head>
+<body>
+  <h1>Upload Your Flashcard</h1>
+  <form id="flashcard-form">
+    <input type="text" id="question" placeholder="Question" required />
+    <input type="text" id="answer" placeholder="Answer" required />
+    <input type="file" id="image" accept="image/*" />
+    <button type="submit">Upload</button>
+    <div id="statusMsg"></div>
+  </form>
+  <script type="module" src="scripts/user.js"></script>
+</body>
+</html>
