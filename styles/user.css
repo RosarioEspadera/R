@@ -1,7 +1,7 @@
 /* Base Layout */
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f9f9f9;
+  background-color: #461e1e;
   padding: 2rem;
   max-width: 600px;
   margin: auto;
@@ -48,7 +48,7 @@ button {
   padding: 0.75rem;
   font-size: 1rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
 }
 
 button {
@@ -149,6 +149,7 @@ button:hover {
 .size-6 {
   width: 24px;
   height: 24px;
+  color:#000000;
 }
 
 /* Animations */
@@ -354,8 +355,11 @@ body {
 
 button {
   background-color: var(--accent);
-  color: white;
+  color: #ffffff;
 }
 button:hover {
-  background-color: darken(var(--accent), 10%);
+  background-color: var(--text), 70%);
+}
+.size-6{
+  color: #ffff;
 }
